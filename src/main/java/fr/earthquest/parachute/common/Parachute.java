@@ -1,23 +1,4 @@
-//
-//  =====GPL=============================================================
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; version 2 dated June, 1991.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program;  if not, write to the Free Software
-//  Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
-//  =====================================================================
-//
-//
-// Copyright 2011-2014 Michael Sheppard (crackedEgg)
-//
-package com.parachute.common;
+package fr.earthquest.parachute.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,7 +18,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
-
 
 @Mod(
 		modid = Parachute.modid,
@@ -81,8 +61,8 @@ public class Parachute {
 	public static final int armorSlot = 2;  // armor slot: 0 = ??, 1 = ??, 2 = chestplate, 3 = ??
 
 	@SidedProxy(
-			clientSide = "com.parachute.client.ClientProxyParachute",
-			serverSide = "com.parachute.common.CommonProxyParachute"
+			clientSide = "fr.earthquest.parachute.client.ClientProxyParachute",
+			serverSide = "fr.earthquest.parachute.common.CommonProxyParachute"
 	)
 	public static CommonProxyParachute proxy;
 
@@ -97,6 +77,9 @@ public class Parachute {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		CommonProxyParachute.config = new Configuration(event.getSuggestedConfigurationFile());
+		proxy.initConfig();
+
 		String generalComments = Parachute.name + " Config\nMichael Sheppard (crackedEgg)"
 				+ " For Minecraft Version " + Parachute.mcversion + "\n";
 		String usageComment = "singleUse - set to true for hop n pop single use (false)";
@@ -165,19 +148,24 @@ public class Parachute {
 		// create new items, set unlocalized names and register
 		parachuteItem = (ItemParachute) (new ItemParachute(NYLON, chuteID, armorType)).setUnlocalizedName(parachuteName);
 		parachuteItem.setTextureName(Parachute.modid + ":" + parachuteName);
-		GameRegistry.registerItem(parachuteItem, parachuteName);
+		//GameRegistry.registerItem(parachuteItem, parachuteName);
+		GameData.getItemRegistry().addObject(CommonProxyParachute.itemList.get(parachuteName), parachuteName, parachuteItem);
+
 
 		ripcordItem = (ItemRipCord) (new ItemRipCord()).setUnlocalizedName(ripcordName);
 		ripcordItem.setTextureName(Parachute.modid + ":" + ripcordName);
-		GameRegistry.registerItem(ripcordItem, ripcordName);
+		//GameRegistry.registerItem(ripcordItem, ripcordName);
+		GameData.getItemRegistry().addObject(CommonProxyParachute.itemList.get(ripcordName), ripcordName, ripcordItem);
 
 		aadItem = (ItemAutoActivateDevice) (new ItemAutoActivateDevice()).setUnlocalizedName(aadName);
 		aadItem.setTextureName(Parachute.modid + ":" + aadName);
-		GameRegistry.registerItem(aadItem, aadName);
+		//GameRegistry.registerItem(aadItem, aadName);
+		GameData.getItemRegistry().addObject(CommonProxyParachute.itemList.get(aadName), aadName, aadItem);
 
 		hopnpopItem = (ItemHopAndPop) (new ItemHopAndPop(RIPSTOP)).setUnlocalizedName(hopnpopName);
 		hopnpopItem.setTextureName(Parachute.modid + ":" + hopnpopName);
-		GameRegistry.registerItem(hopnpopItem, hopnpopName);
+		//GameRegistry.registerItem(hopnpopItem, hopnpopName);
+		GameData.getItemRegistry().addObject(CommonProxyParachute.itemList.get(hopnpopName), hopnpopName, hopnpopItem);
 
 		proxy.registerRenderer();
 		PacketHandler.init();

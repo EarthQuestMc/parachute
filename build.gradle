@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "earthQuestForge"
+            url = "https://maven.earthquest.fr/forge"
+        }
+    }
+    dependencies {
+        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+
+            changing = true
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = "earthquestmods"
+        url = uri("https://maven.earthquest.fr/mods")
+    }
+    maven {
+        name = "earthQuestLibs"
+        url = uri("https://maven.earthquest.fr/lib")
+    }
+}
+
+apply plugin: 'forge'
+
+version = "1.0.2"
+group= "fr.earthquest"
+archivesBaseName = "parachute"
+targetCompatibility = sourceCompatibility = JavaVersion.VERSION_1_8
+
+
+minecraft {
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "eclipse"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    archiveName = archivesBaseName  + '-' + version + "-forge" + '.jar'
+}
+
+processResources
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
